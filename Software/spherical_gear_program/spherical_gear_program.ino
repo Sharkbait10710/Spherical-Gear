@@ -1,59 +1,53 @@
-// Define pin connections & motor's steps per revolution
-const int dirPin = 6;
-const int dirPin2 = 4;
-const int stepPin = 7;
-const int stepPin2 = 5;
-const int stepsPerRevolution = 1600;
+//Bottom Stepper Motor Pins
+const int botMotDir = 6;
+const int botMotStp = 7;
+
+//Top Stepper Motor Pins
+const int topMotDir = 4;
+const int topMotStp = 5;
+
+//DEFAULT STEP: 1 step out of 200 step
 
 void setup()
 {
   // Declare pins as Outputs
-  pinMode(stepPin, OUTPUT);
-  pinMode(dirPin, OUTPUT);
-  pinMode(stepPin2, OUTPUT);
-  pinMode(dirPin2, OUTPUT);
+  pinMode(botMotDir, OUTPUT);
+  pinMode(botMotStp, OUTPUT);
+  pinMode(topMotDir, OUTPUT);
+  pinMode(topMotStp, OUTPUT);
+  Serial.begin(9600);
 }
+
+//Directionality Functions - Sets rotation direction
+void botDirCW() {digitalWrite(botMotDir, HIGH);}
+void botDirCCW() {digitalWrite(botMotDir, LOW);}
+void topDirCW() {digitalWrite(topMotDir, HIGH);}
+void topDirCCW() {digitalWrite(topMotDir, LOW);}
+
+//Step Functions - Rotates motor shaft
+void botStp_HIGH() {digitalWrite(botMotStp, HIGH);}
+void botStp_LOW() {digitalWrite(botMotStp, LOW);}
+void topStp_HIGH() {digitalWrite(topMotStp, HIGH);}
+void topStp_LOW() {digitalWrite(topMotStp, LOW);}
+
+//Speed Functionalities - Increase the time to decrease speed; converse is true
+void StepDelay() {delayMicroseconds(8000);}
+
+//Rotation Functions
+void Drive() {botStp_HIGH(); topStp_HIGH(); StepDelay(); botStp_LOW(); topStp_LOW();}
+void aboutSkyAxis_CW() {botDirCW(); topDirCCW(); Drive();}
+void aboutSkyAxis_CCW() {botDirCCW(); topDirCW(); Drive();}
+void aboutDriveAxis_CW() {botDirCW(); topDirCW(); Drive();}
+void aboutDriveAxis_CCW() {botDirCCW(); topDirCCW(); Drive();}
+
 void loop()
 {
-//  // Set motor direction clockwise
-//  digitalWrite(dirPin, HIGH);
-//
-//  // Spin motor slowly
-//  for(int x = 0; x < stepsPerRevolution; x++)
-//  {
-//    digitalWrite(stepPin, HIGH);
-//    delayMicroseconds(2000);
-//    digitalWrite(stepPin, LOW);
-//    delayMicroseconds(2000);
-//  }
-//  delay(1000); // Wait a second
-  
-  // Set motor direction counterclockwise
-  digitalWrite(dirPin, LOW);
-  digitalWrite(dirPin2, HIGH);
-  // Spin motor quickly
-  for(int x = 0; x < stepsPerRevolution; x++)
-  {
-    digitalWrite(stepPin, HIGH);
-    digitalWrite(stepPin2, LOW);
-    delayMicroseconds(1000);
-    digitalWrite(stepPin, LOW);
-    digitalWrite(stepPin2, HIGH);
-    delayMicroseconds(1000);
-  }
-  delay(100); // Wait a second
-
-  digitalWrite(dirPin, LOW);
-  digitalWrite(dirPin2, LOW);
-  // Spin motor quickly
-  for(int x = 0; x < stepsPerRevolution; x++)
-  {
-    digitalWrite(stepPin, HIGH);
-    digitalWrite(stepPin2, LOW);
-    delayMicroseconds(1000);
-    digitalWrite(stepPin, LOW);
-    digitalWrite(stepPin2, HIGH);
-    delayMicroseconds(1000);
-  }
-  delay(100); // Wait a second
+    for (int i = 0; i < 2000; i++) aboutSkyAxis_CW();
+    delay(100);
+    for (int i = 0; i < 2000; i++) aboutSkyAxis_CCW();
+    delay(100);
+    for (int i = 0; i < 2000; i++) aboutDriveAxis_CW();
+    delay(100);
+    for (int i = 0; i < 2000; i++) aboutDriveAxis_CCW();
+    delay(100);
 }

@@ -1,0 +1,20 @@
+==Teeth No Data==
+    *NEMA17 Pinion*: 26 --> drives differential driven gear
+    *Differential Driven Gear*: spur 39 --> driven by NEMA17 Pinion 
+                                bevel 30 --> drives drive gear
+    *Drive Gear*: bevel 10 --> driven by differential driven gear
+                  spherical 16 --> drives spherical gear
+    *Spherical Gear*: 32 --> driven by drive gear
+
+!Gear Ratio From Motor to Sphere!
+    (39/26) x (10/30) x (32/16) = 1
+    ==> Implies: every degree rotation of stepper yields the exact degree rotation in Sphere
+
+!Mechanical Rules!
+    1) If both motors rotate in opposite directions relative to their motor shaft faces, then the spherical
+       gear would rotate about the axis pointing towards the sky.
+       --> If top motor rotates CW, then the spherical gear will rotate CCW.
+       --> If top motor rotates CCW, then the spherical gear will rotate CW.
+    2) If both motors rotate in the same direction relative to their motor shaft faces, then the spherical
+       gear would rotate about an axis through its center that is parallel with the drive gears axis.
+       --> Must keep track of drive gear axis if interested in precision                           
