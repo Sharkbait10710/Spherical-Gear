@@ -1,0 +1,14 @@
+.carousel-item {
+    height: 100vh;
+    width: 100%;
+    text-align: center;
+}
+
+.carousel-item img {
+    height: 100%;
+    vertical-align: top;
+}
+
+li {
+    text-align: center;
+}

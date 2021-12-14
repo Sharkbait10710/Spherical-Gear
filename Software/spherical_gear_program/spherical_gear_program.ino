@@ -2,6 +2,7 @@
 const int botMotDir = 6;
 const int botMotStp = 7;
 
+//Defines specific key strokes for command-line input
 #define w 119
 #define a 97
 #define s 115
@@ -38,7 +39,7 @@ void topStp_HIGH() {digitalWrite(topMotStp, HIGH);}
 void topStp_LOW() {digitalWrite(topMotStp, LOW);}
 
 //Speed Functionalities - Increase the time to decrease speed; converse is true
-void StepDelay() {delayMicroseconds(8000);}
+void StepDelay() {delayMicroseconds(16000);}
 
 //Rotation Functions; sky-axis relative to top-down. drive-axis relative to non-idle gear starting from top view looking down
 void Drive() {botStp_HIGH(); topStp_HIGH(); StepDelay(); botStp_LOW(); topStp_LOW();}
@@ -56,22 +57,37 @@ bool rand_cond = true;
 
 void loop()
 {
+  //Read serial input
   readString = get_Serial();
 
+  //Allow user-control
   if (readString.length() > 0) {
     Serial.println("readString: " + readString);  //so you can see the captured string 
     if (readString == "randomize") rand_cond = true;
     else {rand_cond = false; cmdLine(readString);}
     readString=""; //empty for next input
   } 
-  
-  if (rand_cond) {randomize(); multistep();}
+
+  //Start Demo
+  if (rand_cond) {
+    Serial.println("Tilting CW");
+    tilt_CW(200);
+    Serial.println("Tilting CCW");
+    tilt_CCW(200);
+    Serial.println("Running CW");
+    run_CW(200);
+    Serial.println("Running CCW");
+    run_CCW(200);
+    randomize();
+    }
 }
 
+//Starts serial communication
 void establishContact() {
   Serial.begin(9600);
 }
 
+//Gets command-line input
 String get_Serial() {
   String ret = "";
   while (Serial.available()) {
@@ -81,6 +97,7 @@ String get_Serial() {
   } return ret;
 }
 
+//Handles command-line control
 void cmdLine(String str) {
   int n = str.toInt();
   if (n == 0) n = static_cast<int>(readString[0]);
@@ -94,6 +111,7 @@ void cmdLine(String str) {
     }
 }
 
+//Demo Functions
 void randomize() {
   Serial.println("Program is randomizing spherical motion");
   bool arr[] = {false, false, false, false};
@@ -101,10 +119,10 @@ void randomize() {
     int rand_num = random() % 4;
     while (arr[rand_num]) rand_num = random() % 4;
     switch (rand_num) {
-      case 0: Serial.println("In progress: tilt_CW"); tilt_CW(random() % 150); arr[0] = true; break;
-      case 1: Serial.println("In progress: run_CW"); run_CW(random() % 150); arr[1] = true; break;
-      case 2: Serial.println("In progress: tilt_CCW"); tilt_CCW(random() % 150); arr[2] = true; break;
-      case 3: Serial.println("In progress: run_CCW"); run_CCW(random() % 150); arr[3] = true; break;
+      case 0: Serial.println("In progress: tilt_CW"); tilt_CW(random() % 150+50); arr[0] = true; break;
+      case 1: Serial.println("In progress: run_CW"); run_CW(random() % 150+50); arr[1] = true; break;
+      case 2: Serial.println("In progress: tilt_CCW"); tilt_CCW(random() % 150+50); arr[2] = true; break;
+      case 3: Serial.println("In progress: run_CCW"); run_CCW(random() % 150+50); arr[3] = true; break;
     }
   }
   Serial.println();
